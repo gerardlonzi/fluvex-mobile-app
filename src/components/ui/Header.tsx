@@ -1,6 +1,6 @@
 // src/components/ui/Header.tsx
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet,Image } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useTheme,themes } from '../../../app/_layout';
 
@@ -31,7 +31,8 @@ export default function Header({
       ) : (
         <View style={{ width: 40 }} /> // spacer
       )}
-      <Text style={[styles.title, { color: colors.textMain }]}>{title}</Text>
+      <Image source={require('../../../assets/images/mini-logo.png')} style={styles.image} resizeMode="contain"/>
+
       <View style={styles.actions}>
         <TouchableOpacity onPress={onNotificationPress} style={styles.iconButton}>
           <MaterialIcons name="notifications" size={24} color={colors.textMuted} />
@@ -54,13 +55,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 24,
     paddingTop: 48,
     paddingBottom: 16,
   },
   title: { fontSize: 20, fontWeight: 'bold' },
   actions: { flexDirection: 'row', gap: 16 },
   iconButton: { padding: 8, position: 'relative' },
+  image :{
+    Width : 30,
+    height :30, 
+    position: 'absolute', 
+    left:'-70%',
+    bottom: 20
+  },
+
   badge: {
     position: 'absolute',
     top: 4,
