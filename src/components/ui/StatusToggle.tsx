@@ -35,7 +35,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 24,
     paddingVertical: 12,
-    marginHorizontal: 24,
     marginBottom: 16,
     borderRadius: 12,
     borderWidth: 1,
