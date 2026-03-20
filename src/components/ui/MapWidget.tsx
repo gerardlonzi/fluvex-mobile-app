@@ -61,7 +61,6 @@ export default function MapWidget({
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 24,
     marginBottom: 32,
     height: 200,
     borderRadius: 16,
