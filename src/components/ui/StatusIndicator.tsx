@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   icon: { marginBottom: 8 },
-  text: { fontSize: 36, fontWeight: 'bold' },
+  text: { fontSize: 20, fontWeight: 'bold' },
   subText: {
     fontSize: 12,
     fontWeight: '500',
