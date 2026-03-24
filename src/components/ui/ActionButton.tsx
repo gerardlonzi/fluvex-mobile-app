@@ -37,7 +37,6 @@ export default function ActionButton({ label, onPress, isActive = true }: Action
 
 const styles = StyleSheet.create({
   button: {
-    marginHorizontal: 24,
     marginBottom: 24,
     borderRadius: 16,
     borderWidth: 1,
