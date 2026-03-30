@@ -39,7 +39,6 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     gap: 16,
-    paddingHorizontal: 24,
     paddingVertical: 16,
   },
   item: {
@@ -52,8 +51,8 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   iconContainer: {
-    width: 48,
-    height: 48,
+    width: 40,
+    height: 40,
     borderRadius: 24,
     alignItems: 'center',
     justifyContent: 'center',
