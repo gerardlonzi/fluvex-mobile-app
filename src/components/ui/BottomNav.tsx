@@ -17,9 +17,9 @@ export default function BottomNav() {
         <Text style={[styles.label, { color: colors.primary }]}>Accueil</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.item}>
-        <MaterialIcons name="payments" size={24} color={colors.textMuted} />
-        <Text style={[styles.label, { color: colors.textMuted }]}>Gains</Text>
+      <TouchableOpacity style={styles.item} onPress={()=>router.push('/Map/liveMap')}>
+        <MaterialIcons name="map" size={24} color={colors.textMuted} />
+        <Text style={[styles.label, { color: colors.textMuted }]}>Maps</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.item}>
