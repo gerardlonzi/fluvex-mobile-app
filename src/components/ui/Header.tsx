@@ -3,6 +3,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet,Image } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useTheme,themes } from '../../../app/_layout';
+import { useRouter } from 'expo-router';
 
 interface HeaderProps {
   title: string;
@@ -21,6 +22,7 @@ export default function Header({
 }: HeaderProps) {
   const { theme } = useTheme();
   const colors = theme === 'dark' ? themes.dark : themes.light;
+  const router = useRouter();
 
   return (
     <View style={styles.header}>
@@ -34,7 +36,7 @@ export default function Header({
       <Image source={require('../../../assets/images/mini-logo.png')} style={styles.image} resizeMode="contain"/>
 
       <View style={styles.actions}>
-        <TouchableOpacity onPress={onNotificationPress} style={styles.iconButton}>
+        <TouchableOpacity onPress={() => router.push('/notification/notif')} style={styles.iconButton}>
           <MaterialIcons name="notifications" size={24} color={colors.textMuted} />
           {notificationCount > 0 && (
             <View style={[styles.badge, { backgroundColor: colors.primary }]}>
@@ -55,8 +57,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: 48,
+    paddingTop: 10,
     paddingBottom: 16,
+    // backgroundColor:'white'
   },
   title: { fontSize: 20, fontWeight: 'bold' },
   actions: { flexDirection: 'row', gap: 16 },
