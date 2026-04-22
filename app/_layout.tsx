@@ -1,25 +1,35 @@
-// app/_layout.tsx (mises à jour)
+// app/_layout.tsx
 import { Stack } from 'expo-router';
 import { useEffect, useState, createContext, useContext } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
-import { View, ActivityIndicator, Text, StyleSheet, Image, Appearance } from 'react-native';
-import { useFonts } from 'expo-font';  
-import { SafeAreaProvider } from 'react-native-safe-area-context';  
-import {Theme} from '../utils/types'
+import {
+  View,
+  ActivityIndicator,
+  Text,
+  StyleSheet,
+  Image,
+  Appearance,
+} from 'react-native';
+import { useFonts } from 'expo-font';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import {
+  Inter_400Regular,
+  Inter_500Medium,
+  Inter_700Bold,
+} from '@expo-google-fonts/inter';
 
+type Theme = 'light' | 'dark';
 
 SplashScreen.preventAutoHideAsync();
 
-// Theme Context
-const ThemeContext = createContext<{ theme: Theme; toggleTheme: () => void; }>({
+const ThemeContext = createContext<{ theme: Theme; toggleTheme: () => void }>({
   theme: 'dark',
   toggleTheme: () => {},
 });
 
 export const useTheme = () => useContext(ThemeContext);
 
-// Couleurs basées sur ton CSS (optimisé : objets pour light/dark)
-const themes = {
+export const themes = {
   light: {
     background: '#f8fafc',
     surface: '#ffffff',
@@ -45,42 +55,56 @@ const themes = {
 };
 
 export default function RootLayout() {
-  const systemTheme = Appearance.getColorScheme() as Theme;  // Détecte auto
-  const [theme, setTheme] = useState<Theme>(systemTheme || 'dark');  // Défaut dark comme ton HTML
-  const [appReady, setAppReady] = useState(false);
+  const systemTheme = Appearance.getColorScheme() as Theme;
+  const [theme, setTheme] = useState<Theme>(systemTheme || 'dark');
 
-  // Charge fonts (professionnel : attends le chargement avant appReady)
-  const [fontsLoaded] = useFonts({
-    'Inter-Regular': require('../assets/fonts/Inter-Regular.ttf'),  // Télécharge et mets les fonts dans assets/fonts/
-    'Inter-Medium': require('../assets/fonts/Inter-Medium.ttf'),
-    'Inter-Bold': require('../assets/fonts/Inter-Bold.ttf'),
+  const [appIsReady, setAppIsReady] = useState(false);
+
+  const [fontsLoaded, fontError] = useFonts({
+    Inter_400Regular,
+    Inter_500Medium,
+    Inter_700Bold,
   });
 
   useEffect(() => {
     async function prepare() {
       try {
-        // Attends fonts + autres (ex: check auth backend plus tard)
-        if (!fontsLoaded) return;  // Bloque si fonts pas chargées
-        await new Promise(resolve => setTimeout(resolve, 1000));  // Simule autres chargements
+        // Attente des fonts (pas de boucle infinie ici)
+        if (!fontsLoaded && !fontError) {
+          return; // on attend le prochain cycle
+        }
+
+        if (fontError) {
+          console.warn('Erreur chargement fonts :', fontError);
+        }
+
+        // Pause visuelle courte (optionnelle)
+        await new Promise(resolve => setTimeout(resolve, 1500));
+
+        console.log('Préparation terminée : fonts OK, app prête');
       } catch (e) {
-        console.warn(e);
+        console.error('Erreur prepare :', e);
       } finally {
-        await SplashScreen.hideAsync();
-        setAppReady(true);
+        await SplashScreen.hideAsync().catch(() => {});
+        setAppIsReady(true);
       }
     }
+
     prepare();
-  }, [fontsLoaded]);
+  }, [fontsLoaded, fontError]);
 
-  const toggleTheme = () => setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  const toggleTheme = () => setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
 
-  if (!appReady || !fontsLoaded) {
+  if (!appIsReady) {
     return (
       <View style={styles.container}>
-        <Image source={require('../assets/images/mini-logo.png')} style={styles.logo} resizeMode="contain" />
-        <Text style={styles.title}>Ecosyn Driver</Text>
+        <Image
+          source={require('../assets/images/mini-logo.png')}
+          style={styles.logo}
+          resizeMode="contain"
+        />
         <ActivityIndicator size="large" color="#00cd44" style={styles.spinner} />
-        <Text style={styles.text}>Chargement...</Text>
+        <Text style={styles.loadingText}>Chargement...</Text>
       </View>
     );
   }
@@ -88,10 +112,36 @@ export default function RootLayout() {
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
       <SafeAreaProvider>
-        <Stack screenOptions={{ headerShown: false, animation: 'slide_from_right' }} />
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            animation: 'fade',
+          }}
+          initialRouteName="(auth)/login"  // Force démarrage sur login (pas de boucle)
+        />
       </SafeAreaProvider>
     </ThemeContext.Provider>
   );
 }
 
-const styles = StyleSheet.create({ /* mêmes styles que avant, mais avec primary #00cd44 pour spinner */ });
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#020617',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logo: {
+    width: 140,
+    height: 140,
+    marginBottom: 40,
+  },
+  spinner: {
+    marginBottom: 30,
+  },
+  loadingText: {
+    color: '#94a3b8',
+    fontSize: 16,
+    marginTop: 16,
+  },
+});
